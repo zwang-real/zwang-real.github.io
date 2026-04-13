@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Portfolio Update</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "studio-bg": "#FAFAFA",
+                        "studio-ink": "#111111",
+                        "studio-gray": "#555555",
+                        "studio-light": "#888888",
+                        "studio-hairline": "#E0E0E0",
+                        "studio-border": "#D1D1D1",
+                    },
+                    fontFamily: {
+                        "mono": ["'IBM Plex Mono'", "monospace"],
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-studio-bg text-studio-ink font-mono antialiased cursor-none;
+            }
+            a, button, .group, input, textarea {
+                @apply cursor-none;
+            }
+        }
+        @layer utilities {
+            .terminal-cursor::after {
+                content: '_';
+                animation: blink 1s step-start infinite;
+                @apply text-studio-gray;
+            }
+            @keyframes blink {
+                50% { opacity: 0; }
+            }
+            #custom-cursor {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                background-color: white;
+                mix-blend-mode: difference;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: width 0.2s cubic-bezier(0.19, 1, 0.22, 1), height 0.2s cubic-bezier(0.19, 1, 0.22, 1), transform 0.1s linear;
+            }
+            body:has(a:hover) #custom-cursor,
+            body:has(button:hover) #custom-cursor,
+            body:has(.group:hover) #custom-cursor,
+            body:has(input:hover) #custom-cursor,
+            body:has(textarea:hover) #custom-cursor {
+                width: 48px;
+                height: 48px;
+                background-color: white; 
+                opacity: 1;
+            }
+        }
+        ::selection {
+            background: #e5e5e5; color: #111;
+        }
+        .skill-capsule {
+            @apply border border-studio-hairline bg-white text-studio-ink text-[11px] font-mono cursor-none transition-all duration-200 ease-out px-2 py-0.5 rounded-sm inline-flex items-center justify-center whitespace-nowrap;
+        }
+        .skill-capsule:hover {
+            @apply bg-studio-ink text-white border-studio-ink;
+        }
+        #internship-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        #internship-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .overlay-content {
+            transform: translateY(10px);
+            transition: transform 0.3s ease-in-out;
+        }
+        #internship-overlay.active .overlay-content {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row overflow-x-hidden selection:bg-gray-200">
+<div id="custom-cursor"></div>
+<script>
+    const cursor = document.getElementById('custom-cursor');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+</script>
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-studio-ink/20 backdrop-blur-sm p-4" id="internship-overlay">
+<div class="overlay-content bg-white w-full max-w-2xl border border-studio-hairline shadow-2xl relative p-8 md:p-12 cursor-none">
+<button class="absolute top-6 right-6 text-studio-light hover:text-studio-ink transition-colors font-mono text-[10px] uppercase tracking-widest cursor-none" onclick="document.getElementById('internship-overlay').classList.remove('active')">
+                [ CLOSE_X ]
+            </button>
+<div class="font-mono space-y-6">
+<div class="border-b border-studio-hairline pb-6">
+<div class="flex justify-between items-start mb-2">
+<h2 class="text-xl md:text-2xl font-medium text-studio-ink">TechFlow Inc.</h2>
+<span class="text-[11px] text-studio-light bg-studio-bg px-2 py-1 border border-studio-hairline">2023 — PRES</span>
+</div>
+<h3 class="text-sm text-studio-gray">Data Science Intern</h3>
+</div>
+<div class="space-y-4">
+<p class="text-xs text-studio-ink italic leading-relaxed">
+                        Focused on optimizing experimentation platforms and ensuring data integrity across high-volume pipelines.
+                    </p>
+<div class="space-y-2">
+<h4 class="text-[10px] text-studio-light uppercase tracking-widest mb-3">Key Responsibilities &amp; Impact</h4>
+<ul class="list-disc list-outside ml-4 space-y-2 text-[11px] text-studio-gray leading-relaxed">
+<li>Designed and implemented a scalable A/B testing framework in Python, reducing experiment setup time by 40% for the product team.</li>
+<li>Built automated data quality checks using Great Expectations within Airflow DAGs, catching 95% of schema anomalies before production.</li>
+<li>Collaborated with engineering to define tracking specifications for new feature launches, ensuring 100% data coverage.</li>
+<li>Conducted deep-dive analysis on user retention cohorts, presenting findings to VP of Product that influenced Q4 roadmap.</li>
+</ul>
+</div>
+</div>
+<div class="pt-6 border-t border-studio-hairline flex gap-3 text-[10px] text-studio-light">
+<span class="border border-studio-hairline px-2 py-1">Python</span>
+<span class="border border-studio-hairline px-2 py-1">SQL</span>
+<span class="border border-studio-hairline px-2 py-1">Airflow</span>
+<span class="border border-studio-hairline px-2 py-1">A/B Testing</span>
+</div>
+</div>
+</div>
+</div>
+<aside class="w-full md:w-64 md:h-screen md:fixed top-0 left-0 bg-studio-bg p-8 md:p-12 z-20 flex flex-col justify-between border-r border-studio-hairline/60">
+<div>
+<div class="mb-12">
+<h1 class="text-sm font-medium tracking-tight flex items-center gap-2 text-studio-ink">
+<span class="text-studio-gray select-none">$</span> Zijing Wang
+                </h1>
+<p class="text-[10px] text-studio-gray mt-1 pl-4 uppercase tracking-widest font-mono">Product Data Science</p>
+</div>
+<nav class="space-y-4 text-[11px] pl-4 border-l border-studio-hairline/80 ml-1 font-mono">
+<a class="block text-studio-gray hover:text-studio-ink transition-colors cursor-none" href="#">01. Overview</a>
+<a class="block text-studio-gray hover:text-studio-ink transition-colors cursor-none" href="#experience">02. Experience</a>
+<a class="block text-studio-gray hover:text-studio-ink transition-colors cursor-none" href="#toolkit">03. Toolkit</a>
+<a class="block text-studio-gray hover:text-studio-ink transition-colors cursor-none" href="#projects">04. Projects</a>
+<a class="block text-studio-gray hover:text-studio-ink transition-colors cursor-none" href="#insights">05. Insights</a>
+<a class="block text-studio-gray hover:text-studio-ink transition-colors cursor-none" href="#contact">06. Contact</a>
+</nav>
+</div>
+<div class="hidden md:block text-[10px] text-studio-light pl-4 font-mono">
+<div class="flex items-center gap-2 mb-1">
+<span class="w-1 h-1 bg-studio-gray rounded-full"></span>
+<span>Status: Available</span>
+</div>
+<p>v2.4.0-stable</p>
+</div>
+</aside>
+<main class="flex-1 md:ml-64 w-full max-w-4xl mx-auto px-8 md:px-16 py-12 md:py-20 space-y-32 scroll-smooth">
+<section class="max-w-2xl pt-8">
+<div class="text-[10px] text-studio-light mb-8 flex items-center gap-2 font-mono">
+<span class="text-studio-gray">README.md</span>
+<span class="h-px w-8 bg-studio-hairline"></span>
+</div>
+<h2 class="text-lg md:text-xl leading-relaxed font-normal text-studio-ink font-mono">
+                Dedicated to understanding the "why" behind the data. I use causal inference and machine learning to model user journeys and optimize product ecosystems. 
+                From e-commerce funnels to marketing attribution, I build the analytical frameworks that guide scalable product decisions.
+            </h2>
+<div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12 text-[11px] text-studio-gray pt-8 border-t border-studio-hairline">
+<div class="font-mono">
+<span class="block text-studio-light mb-3 uppercase tracking-widest">Education</span>
+<p class="mb-1 text-studio-ink">M.S. Information Management (DS & AI), UW '27</p>
+<p class="text-studio-ink">B.S. Event Management, NKU '25</p>
+</div>
+<div class="flex flex-col items-start gap-3 font-mono">
+<span class="block text-studio-light mb-1 uppercase tracking-widest">Primary Links</span>
+<a class="hover:text-studio-ink transition-colors flex items-center gap-2 cursor-none" href="#">
+<span class="material-symbols-outlined text-sm">download</span> Resume.pdf
+                    </a>
+<a class="hover:text-studio-ink transition-colors flex items-center gap-2 cursor-none" href="#">
+<span class="material-symbols-outlined text-sm">terminal</span> GitHub/zwang-real
+                    </a>
+</div>
+</div>
+</section>
+<section id="experience">
+<div class="flex items-center gap-4 mb-10">
+<h3 class="text-[11px] font-medium uppercase tracking-widest text-studio-gray font-mono">02. Experience</h3>
+<div class="h-px flex-1 bg-studio-hairline"></div>
+</div>
+<div class="space-y-8 font-mono">
+<div class="group flex flex-col md:flex-row md:items-baseline gap-4 text-sm cursor-none hover:bg-white hover:shadow-sm p-4 -mx-4 rounded border border-transparent hover:border-studio-hairline transition-all duration-200" onclick="document.getElementById('internship-overlay').classList.add('active')">
+<span class="text-studio-light text-[11px] w-32 shrink-0">2023 — PRES</span>
+<div class="flex-1">
+<h4 class="font-medium text-studio-ink flex items-center gap-2">
+                            Data Science Intern // TechFlow Inc.
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-studio-gray">[view_details]</span>
+</h4>
+<p class="text-studio-gray text-xs mt-2 leading-relaxed">Designed an A/B testing framework reducing experiment setup time by 40%. Implemented automated data quality checks using Great Expectations.</p>
+</div>
+</div>
+<div class="group flex flex-col md:flex-row md:items-baseline gap-4 text-sm p-4 -mx-4 border border-transparent">
+<span class="text-studio-light text-[11px] w-32 shrink-0">2022 — 2023</span>
+<div class="flex-1">
+<h4 class="font-medium text-studio-ink">Product Analytics // ShopifyStream</h4>
+<p class="text-studio-gray text-xs mt-2 leading-relaxed">Analyzed user churn funnels using SQL &amp; Tableau to optimize checkout flow. Developed Looker dashboards for weekly executive reporting.</p>
+</div>
+</div>
+<div class="group flex flex-col md:flex-row md:items-baseline gap-4 text-sm p-4 -mx-4 border border-transparent">
+<span class="text-studio-light text-[11px] w-32 shrink-0">2020 — 2022</span>
+<div class="flex-1">
+<h4 class="font-medium text-studio-ink">Business Analyst // FinServe Corp</h4>
+<p class="text-studio-gray text-xs mt-2 leading-relaxed">Automated weekly reporting dashboards saving 15 hours/week for ops team. Conducted market analysis for new fintech product launch.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="toolkit">
+<div class="flex items-center gap-4 mb-12">
+<h3 class="text-[11px] font-medium uppercase tracking-widest text-studio-gray font-mono">03. Toolkit</h3>
+<div class="h-px flex-1 bg-studio-hairline"></div>
+</div>
+<div class="grid md:grid-cols-3 gap-12 font-mono">
+<div>
+<div class="mb-4">
+<span class="text-[10px] text-studio-light uppercase tracking-widest border-b border-studio-hairline pb-2 block w-max">Core Skills</span>
+</div>
+<div class="flex flex-wrap gap-1 content-start">
+<div class="skill-capsule">Python <span class="text-studio-light ml-1">3.10+</span></div>
+<div class="skill-capsule">SQL</div>
+<div class="skill-capsule">R</div>
+<div class="skill-capsule">Tableau</div>
+<div class="skill-capsule">Pandas</div>
+<div class="skill-capsule">NumPy</div>
+<div class="skill-capsule">Airflow</div>
+</div>
+</div>
+<div>
+<div class="mb-4">
+<span class="text-[10px] text-studio-light uppercase tracking-widest border-b border-studio-hairline pb-2 block w-max">GenAI Skills</span>
+</div>
+<div class="flex flex-wrap gap-1 content-start">
+<div class="skill-capsule">LLMs</div>
+<div class="skill-capsule">LangChain</div>
+<div class="skill-capsule">Prompt Eng.</div>
+<div class="skill-capsule">OpenAI API</div>
+<div class="skill-capsule">Hugging Face</div>
+<div class="skill-capsule">Fine-tuning</div>
+<div class="skill-capsule">Vector DBs</div>
+</div>
+</div>
+<div>
+<div class="mb-4">
+<span class="text-[10px] text-studio-light uppercase tracking-widest border-b border-studio-hairline pb-2 block w-max">Soft Skills</span>
+</div>
+<div class="flex flex-wrap gap-1 content-start">
+<div class="skill-capsule">Product Sense</div>
+<div class="skill-capsule">Stakeholder Mgmt</div>
+<div class="skill-capsule">Storytelling</div>
+<div class="skill-capsule">Agile</div>
+<div class="skill-capsule">Cross-functional</div>
+<div class="skill-capsule">Mentoring</div>
+</div>
+</div>
+</div>
+</section>
+<section id="projects">
+<div class="flex items-center gap-4 mb-10">
+<h3 class="text-[11px] font-medium uppercase tracking-widest text-studio-gray font-mono">04. Projects</h3>
+<div class="h-px flex-1 bg-studio-hairline"></div>
+</div>
+<div class="space-y-12 font-mono">
+<div class="space-y-8">
+<article class="group relative">
+<div class="hidden absolute -left-4 top-0 h-full w-[1px] bg-studio-hairline group-hover:bg-studio-ink transition-colors md:block"></div>
+<div class="flex flex-col gap-1 mb-2">
+<div class="flex justify-between items-baseline">
+<h4 class="text-sm font-medium text-studio-ink tracking-tight">Customer Churn Prediction Engine</h4>
+<a class="text-studio-light hover:text-studio-ink transition-colors cursor-none" href="#">
+<span class="material-symbols-outlined text-sm">arrow_outward</span>
+</a>
+</div>
+<span class="text-[10px] text-studio-light uppercase tracking-widest">XGBoost • Docker</span>
+</div>
+<p class="text-xs text-studio-gray leading-relaxed max-w-2xl mt-2">
+                            End-to-end ML pipeline using XGBoost to predict user churn. Implemented SMOTE for class imbalance, achieving AUC-ROC of 0.89. Deployed as Flask API.
+                        </p>
+</article>
+<article class="group relative">
+<div class="hidden absolute -left-4 top-0 h-full w-[1px] bg-studio-hairline group-hover:bg-studio-ink transition-colors md:block"></div>
+<div class="flex flex-col gap-1 mb-2">
+<div class="flex justify-between items-baseline">
+<h4 class="text-sm font-medium text-studio-ink tracking-tight">E-commerce Basket Analysis</h4>
+<a class="text-studio-light hover:text-studio-ink transition-colors cursor-none" href="#">
+<span class="material-symbols-outlined text-sm">arrow_outward</span>
+</a>
+</div>
+<span class="text-[10px] text-studio-light uppercase tracking-widest">R • Market Basket</span>
+</div>
+<p class="text-xs text-studio-gray leading-relaxed max-w-2xl mt-2">
+                            Uncovered product association rules from 1M+ transaction records using Apriori algorithm. Findings led to a new "Frequently Bought Together" widget.
+                        </p>
+</article>
+<article class="group relative">
+<div class="hidden absolute -left-4 top-0 h-full w-[1px] bg-studio-hairline group-hover:bg-studio-ink transition-colors md:block"></div>
+<div class="flex flex-col gap-1 mb-2">
+<div class="flex justify-between items-baseline">
+<h4 class="text-sm font-medium text-studio-ink tracking-tight">Credit Risk Modeling</h4>
+<a class="text-studio-light hover:text-studio-ink transition-colors cursor-none" href="#">
+<span class="material-symbols-outlined text-sm">arrow_outward</span>
+</a>
+</div>
+<span class="text-[10px] text-studio-light uppercase tracking-widest">Logistic Reg • Scoring</span>
+</div>
+<p class="text-xs text-studio-gray leading-relaxed max-w-2xl mt-2">
+                            Developed a logistic regression scorecard for fintech lending. Analyzed 50+ variables to predict default probability with high interpretability.
+                        </p>
+</article>
+</div>
+<div class="border border-dashed border-studio-border p-6 md:p-8 bg-white/50">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-sm text-studio-ink">terminal</span>
+<h4 class="text-xs font-bold uppercase tracking-widest text-studio-ink">PLAYGROUND.EXE</h4>
+</div>
+<div class="space-y-4">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 group cursor-none">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-studio-light text-sm group-hover:text-studio-ink transition-colors">play_arrow</span>
+<span class="text-xs text-studio-gray group-hover:text-studio-ink transition-colors font-medium">Sunglass Face Matcher</span>
+</div>
+<div class="hidden md:block h-px flex-1 bg-studio-hairline mx-4 opacity-50"></div>
+<span class="text-[10px] text-studio-light font-mono uppercase tracking-widest text-right">OpenCV / Computer Vision</span>
+</div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 group cursor-none">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-studio-light text-sm group-hover:text-studio-ink transition-colors">play_arrow</span>
+<span class="text-xs text-studio-gray group-hover:text-studio-ink transition-colors font-medium">Spotify Mood Mix</span>
+</div>
+<div class="hidden md:block h-px flex-1 bg-studio-hairline mx-4 opacity-50"></div>
+<span class="text-[10px] text-studio-light font-mono uppercase tracking-widest text-right">API / Clustering</span>
+</div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 group cursor-none">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-studio-light text-sm group-hover:text-studio-ink transition-colors">play_arrow</span>
+<span class="text-xs text-studio-gray group-hover:text-studio-ink transition-colors font-medium">Recipe Generator</span>
+</div>
+<div class="hidden md:block h-px flex-1 bg-studio-hairline mx-4 opacity-50"></div>
+<span class="text-[10px] text-studio-light font-mono uppercase tracking-widest text-right">GPT-2 / NLP</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="insights">
+<div class="flex items-center gap-4 mb-10">
+<h3 class="text-[11px] font-medium uppercase tracking-widest text-studio-gray font-mono">05. Insights</h3>
+<div class="h-px flex-1 bg-studio-hairline"></div>
+</div>
+<div class="space-y-4 font-mono max-w-2xl">
+<a class="block group cursor-none" href="#">
+<div class="flex items-baseline justify-between border-b border-transparent hover:border-studio-hairline pb-2 transition-all">
+<h4 class="text-sm text-studio-ink group-hover:text-studio-gray transition-colors">Why A/B Testing often fails in low-traffic B2B products</h4>
+<span class="text-[10px] text-studio-light whitespace-nowrap ml-4">Oct 24, 2023</span>
+</div>
+</a>
+<a class="block group cursor-none" href="#">
+<div class="flex items-baseline justify-between border-b border-transparent hover:border-studio-hairline pb-2 transition-all">
+<h4 class="text-sm text-studio-ink group-hover:text-studio-gray transition-colors">Reflections on data quality vs. model complexity</h4>
+<span class="text-[10px] text-studio-light whitespace-nowrap ml-4">Sep 12, 2023</span>
+</div>
+</a>
+<a class="block group cursor-none" href="#">
+<div class="flex items-baseline justify-between border-b border-transparent hover:border-studio-hairline pb-2 transition-all">
+<h4 class="text-sm text-studio-ink group-hover:text-studio-gray transition-colors">Understanding Causal Inference without the math jargon</h4>
+<span class="text-[10px] text-studio-light whitespace-nowrap ml-4">Aug 05, 2023</span>
+</div>
+</a>
+<a class="block group cursor-none" href="#">
+<div class="flex items-baseline justify-between border-b border-transparent hover:border-studio-hairline pb-2 transition-all">
+<h4 class="text-sm text-studio-ink group-hover:text-studio-gray transition-colors">My setup for reproducible data science environments</h4>
+<span class="text-[10px] text-studio-light whitespace-nowrap ml-4">Jun 20, 2023</span>
+</div>
+</a>
+</div>
+</section>
+<section class="pb-24" id="contact">
+<div class="flex items-center gap-4 mb-10">
+<h3 class="text-[11px] font-medium uppercase tracking-widest text-studio-gray font-mono">06. Contact</h3>
+<div class="h-px flex-1 bg-studio-hairline"></div>
+</div>
+<div class="grid md:grid-cols-2 gap-16 font-mono">
+<div class="text-xs text-studio-gray leading-relaxed">
+<p class="mb-8">
+                        Open to full-time opportunities in Product Data Science or Analytics. Currently based in San Francisco, CA.
+                    </p>
+<div class="space-y-3 text-[11px]">
+<a class="flex items-center gap-2 hover:text-studio-ink transition-colors cursor-none" href="mailto:alex.chen@berkeley.edu">
+<span class="text-studio-light">email:</span> alex.chen@berkeley.edu
+                        </a>
+<a class="flex items-center gap-2 hover:text-studio-ink transition-colors cursor-none" href="#">
+<span class="text-studio-light">linked:</span> linkedin/in/alexchen
+                        </a>
+</div>
+</div>
+<form class="space-y-6 text-[11px]">
+<div class="grid grid-cols-1 gap-6">
+<div class="flex flex-col">
+<label class="text-[9px] text-studio-light mb-1 uppercase tracking-widest">input_name</label>
+<input class="bg-transparent border-b border-studio-hairline focus:border-studio-gray focus:ring-0 px-0 py-2 transition-colors outline-none rounded-none placeholder-studio-light/30 text-studio-ink cursor-none" placeholder="Type name..." type="text"/>
+</div>
+<div class="flex flex-col">
+<label class="text-[9px] text-studio-light mb-1 uppercase tracking-widest">input_message</label>
+<textarea class="bg-transparent border-b border-studio-hairline focus:border-studio-gray focus:ring-0 px-0 py-2 transition-colors outline-none rounded-none placeholder-studio-light/30 text-studio-ink w-full resize-none cursor-none" placeholder="Enter message..." rows="2"></textarea>
+</div>
+</div>
+<div class="pt-2">
+<button class="text-[10px] uppercase tracking-widest text-studio-gray hover:text-studio-ink transition-all cursor-none" type="button">
+                            [ SEND_MESSAGE ]
+                        </button>
+</div>
+</form>
+</div>
+</section>
+<footer class="pt-8 pb-12 text-[10px] text-studio-light flex justify-between items-center border-t border-studio-hairline/60 font-mono">
+<span>© 2024 Alex Chen</span>
+<span class="terminal-cursor">built_with_mono</span>
+</footer>
+</main>
+</body></html>
