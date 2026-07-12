@@ -1,0 +1,86 @@
+---
+import site from '../data/site.json';
+import SectionHeader from './SectionHeader.astro';
+
+// Spec doc: contact = just email + linkedin. No form (static-site friction).
+const number = site.socials.email && site.socials.linkedin ? '05' : '05';
+---
+
+<section id="contact" class="section reveal">
+  <SectionHeader number={number} title="Contact" meta="[ ping.sh ]" />
+
+  <div class="contact">
+    <p class="lead">
+      Best reached over email. Also on GitHub &amp; LinkedIn.
+    </p>
+
+    <ul class="channels">
+      <li>
+        <span class="key">$ mail</span>
+        <a href={`mailto:${site.socials.email}`}>{site.socials.email}</a>
+      </li>
+      <li>
+        <span class="key">$ github</span>
+        <a href={site.socials.github} target="_blank" rel="noopener">
+          {site.socials.github.replace(/^https?:\/\//, '')}
+        </a>
+      </li>
+      <li>
+        <span class="key">$ linkedin</span>
+        <a href={site.socials.linkedin} target="_blank" rel="noopener">
+          {site.socials.linkedin.replace(/^https?:\/\//, '')}
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .contact { max-width: 640px; }
+
+  .lead {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: 1.9;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+  }
+
+  .channels {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-body);
+  }
+  .channels li {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .channels li:first-child { border-top: 1px solid var(--hairline); }
+
+  .key { color: var(--text-aux); user-select: none; }
+
+  .channels a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color var(--dur-base);
+    word-break: break-all;
+  }
+  .channels a:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .channels li {
+      grid-template-columns: 80px 1fr;
+      gap: 12px;
+    }
+    .key { font-size: var(--fs-caption); }
+  }
+</style>

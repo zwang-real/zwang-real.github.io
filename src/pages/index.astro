@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
+import Projects from '../components/Projects.astro';
+import Toolkit from '../components/Toolkit.astro';
+import Writing from '../components/Writing.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<BaseLayout>
+  <Sidebar />
+
+  <main class="main">
+    <Hero />
+
+    <div class="sections">
+      <About />
+      <hr class="sep" />
+      <Experience />
+      <hr class="sep" />
+      <Projects />
+      <hr class="sep" />
+      <Toolkit />
+      {/* Writing self-hides when there are no non-draft posts */}
+      <Writing />
+      <hr class="sep" />
+      <Contact />
+    </div>
+
+    <footer class="foot">
+      <span>PORTFOLIO v3.0 · [NAME_PLACEHOLDER]</span>
+      <span class="cursor-blink">end_of_transmission</span>
+    </footer>
+  </main>
+
+  <script>
+    // Reveal-on-scroll for .reveal sections. Kept lightweight — no library.
+    const els = document.querySelectorAll<HTMLElement>('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    els.forEach((el) => io.observe(el));
+  </script>
+</BaseLayout>
+
+<style>
+  .main {
+    margin-left: var(--sidebar-w);
+    min-height: 100vh;
+    position: relative;
+  }
+  @media (max-width: 768px) {
+    .main { margin-left: 0; }
+  }
+
+  .sections > .section {
+    padding: var(--section-pad-y) var(--page-x);
+  }
+
+  .sep {
+    border: none;
+    border-top: 1px solid var(--hairline);
+    margin: 0 var(--page-x);
+  }
+
+  .foot {
+    padding: 40px var(--page-x);
+    border-top: 1px solid var(--hairline);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-aux);
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cursor-blink::after {
+    content: '_';
+    color: var(--accent);
+    animation: blink 1s step-start infinite;
+    margin-left: 2px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-blink::after { animation: none; }
+  }
+</style>

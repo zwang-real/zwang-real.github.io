@@ -1,0 +1,71 @@
+---
+import SectionHeader from './SectionHeader.astro';
+
+const groups = [
+  {
+    label: 'Core',
+    items: ['Python', 'SQL', 'R', 'Statistics', 'Experimentation', 'Causal Inference'],
+  },
+  {
+    label: 'ML & GenAI',
+    items: ['scikit-learn', 'PyTorch', 'LLMs', 'RAG', 'Prompt Engineering'],
+  },
+  {
+    label: 'Product',
+    items: ['A/B Testing', 'Metric Design', 'Roadmapping', 'Stakeholder Comm.'],
+  },
+];
+---
+
+<section id="toolkit" class="section reveal">
+  <SectionHeader number="04" title="Toolkit" meta="[ stack.md ]" />
+
+  <div class="grid">
+    {groups.map(g => (
+      <div class="col">
+        <div class="col-label">▍ {g.label}</div>
+        <div class="chips">
+          {g.items.map(item => <span class="chip">{item}</span>)}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  .col-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin-bottom: 16px;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    padding: 6px 12px;
+    border: 1px solid var(--hairline);
+    color: var(--text-dim);
+    transition: background var(--dur-base), color var(--dur-base), border-color var(--dur-base);
+    cursor: default;
+  }
+  .chip:hover {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+</style>

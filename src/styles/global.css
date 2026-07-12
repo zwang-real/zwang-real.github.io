@@ -1,0 +1,90 @@
+@import './tokens.css';
+
+/* ── Reset ──────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(232, 148, 106, 0.18);
+  color: var(--text);
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; background: none; border: none; color: inherit; cursor: pointer; }
+img, svg, canvas { display: block; max-width: 100%; }
+
+/* ── Utility ────────────────────────────────────── */
+.mono { font-family: var(--font-mono); }
+.dim { color: var(--text-dim); }
+.aux { color: var(--text-aux); }
+.accent { color: var(--accent); }
+
+.hairline {
+  border: none;
+  border-top: 1px solid var(--hairline);
+}
+
+/* Cursor blink (used in boot sequence & footer) */
+.cursor-blink::after {
+  content: '_';
+  animation: blink 1s step-start infinite;
+  color: var(--accent);
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Scroll-reveal (see scripts/scroll.ts) */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--dur-slow) var(--ease-out),
+              transform var(--dur-slow) var(--ease-out);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Main content area — pushed right of the sidebar on desktop */
+.main {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  position: relative;
+}
+@media (max-width: 768px) {
+  .main { margin-left: 0; }
+}
+
+/* Section container padding */
+.section {
+  padding: var(--section-pad-y) var(--page-x);
+}
+
+/* Section separator */
+.section-sep {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: 0 var(--page-x);
+}
+
+/* ── Reduced motion ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { transition: none; }
+  .cursor-blink::after { animation: none; }
+}

@@ -1,0 +1,55 @@
+---
+import site from '../data/site.json';
+---
+
+<div class="edge edge-tl">{site.name}.PORTFOLIO / {site.version.split('-')[0].toUpperCase()}</div>
+<div class="edge edge-tr" id="edge-clock">{site.locationCode} —:—:—</div>
+<div class="edge edge-br" id="edge-scroll">SCROLL 000%</div>
+<div class="edge edge-bl">SYS.OK — 2025</div>
+
+<style>
+  .edge {
+    position: fixed;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.08em;
+    color: var(--text-aux);
+    z-index: 100;
+    pointer-events: none;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .edge-tl { top: 20px; left: var(--edge-x); }
+  .edge-tr { top: 20px; right: var(--edge-x); text-align: right; }
+  .edge-br { bottom: 20px; right: var(--edge-x); text-align: right; }
+  .edge-bl { bottom: 20px; left: var(--edge-x); }
+
+  @media (max-width: 768px) {
+    .edge { font-size: 9px; }
+  }
+</style>
+
+<script>
+  // Live clock + scroll % — light client-side
+  const clockEl = document.getElementById('edge-clock');
+  const scrollEl = document.getElementById('edge-scroll');
+  const locationCode = clockEl?.textContent?.split(' —')[0] ?? 'SEATTLE, WA';
+
+  function tick() {
+    if (!clockEl) return;
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    const ss = String(d.getSeconds()).padStart(2, '0');
+    clockEl.textContent = `${locationCode} ${hh}:${mm}:${ss}`;
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  window.addEventListener('scroll', () => {
+    if (!scrollEl) return;
+    const denom = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = denom > 0 ? Math.round((window.scrollY / denom) * 100) : 0;
+    scrollEl.textContent = `SCROLL ${String(pct).padStart(3, '0')}%`;
+  }, { passive: true });
+</script>

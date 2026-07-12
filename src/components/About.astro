@@ -1,0 +1,43 @@
+---
+import site from '../data/site.json';
+import SectionHeader from './SectionHeader.astro';
+---
+
+<section id="about" class="section reveal">
+  <SectionHeader number="01" title="About" meta="[ README.md ]" />
+  <p class="about-text">{site.about}</p>
+  <div class="links">
+    <a href={site.socials.resumeUrl}>[ resume.pdf ]</a>
+    <a href={site.socials.github} target="_blank" rel="noopener">[ github ]</a>
+    <a href={site.socials.linkedin} target="_blank" rel="noopener">[ linkedin ]</a>
+  </div>
+</section>
+
+<style>
+  .about-text {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: 1.9;
+    color: var(--text-dim);
+    max-width: 560px;
+  }
+  .links {
+    margin-top: 32px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .links a {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid var(--hairline);
+    transition: color var(--dur-base), border-color var(--dur-base);
+  }
+  .links a:hover {
+    color: var(--text);
+    border-color: var(--text-aux);
+  }
+</style>

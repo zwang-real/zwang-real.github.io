@@ -1,0 +1,117 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeader from './SectionHeader.astro';
+
+const raw = await getCollection('experience', ({ data }) => !data.hidden);
+const items = raw.sort((a, b) => a.data.order - b.data.order);
+
+function fmtDate(s: string) {
+  if (s === 'PRES') return 'PRES';
+  const [y, m] = s.split('-');
+  return m ? `${y}·${m}` : y;
+}
+---
+
+<section id="experience" class="section reveal">
+  <SectionHeader number="02" title="Experience" meta={`[ n=${items.length} ]`} />
+
+  <div class="list">
+    {items.map(async (it) => {
+      const { Content } = await it.render();
+      return (
+        <details class="item">
+          <summary>
+            <div class="left">
+              <div class="bar"></div>
+              <div>
+                <div class="company">{it.data.company}</div>
+                <div class="role">{it.data.role}</div>
+              </div>
+            </div>
+            <div class="date">{fmtDate(it.data.dateStart)} — {fmtDate(it.data.dateEnd)}</div>
+          </summary>
+          <div class="body">
+            <Content />
+            {it.data.tags.length > 0 && (
+              <div class="tags">
+                {it.data.tags.map(t => <span class="tag">{t}</span>)}
+              </div>
+            )}
+          </div>
+        </details>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .list details { border-bottom: 1px solid var(--hairline); }
+  .list details:first-child { border-top: 1px solid var(--hairline); }
+
+  summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    transition: padding-left var(--dur-base) var(--ease-out);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { padding-left: 8px; }
+  summary:hover .company { color: var(--text); }
+  summary:hover .bar { background: var(--accent); }
+
+  .left { display: flex; align-items: center; gap: 12px; }
+  .bar {
+    width: 2px;
+    height: 16px;
+    background: var(--hairline);
+    transition: background var(--dur-base);
+  }
+  details[open] .bar { background: var(--accent); }
+
+  .company {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    color: var(--text-dim);
+    transition: color var(--dur-base);
+  }
+  details[open] .company { color: var(--text); }
+  .role {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    color: var(--text-aux);
+  }
+  .date {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-aux);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .body {
+    padding: 0 0 24px 14px;
+    color: var(--text-dim);
+    font-size: var(--fs-body);
+    line-height: 1.7;
+    border-left: 1px solid var(--hairline);
+    margin-left: 1px;
+  }
+  .body :global(ul) { padding-left: 18px; }
+  .body :global(li) { margin: 4px 0; }
+  .body :global(p) { margin: 8px 0; }
+
+  .tags { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border: 1px solid var(--hairline);
+    color: var(--text-aux);
+    letter-spacing: 0.04em;
+  }
+</style>

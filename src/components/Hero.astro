@@ -1,0 +1,188 @@
+---
+import site from '../data/site.json';
+
+const bootLines = [
+  { delay: 300,  html: `<span class="prompt">$ </span><span class="out">whoami</span>` },
+  { delay: 800,  html: `<span class="accent">&gt; </span><span class="out">${site.name}</span><span class="dim"> — ${site.role}</span>` },
+  { delay: 1600, html: `<span class="prompt">$ </span><span class="out">cat mission.txt</span>` },
+  { delay: 2200, html: `<span class="accent">&gt; </span><span class="out">${site.tagline}</span>` },
+];
+---
+
+<section class="hero" id="hero">
+  <canvas id="terrain"></canvas>
+
+  {/* Floating data annotations around the terrain — archive/dashboard vibe */}
+  <div class="annotations" aria-hidden="true">
+    <div class="anno" style="top:10%;left:3%">TOPO.SCAN</div>
+    <div class="anno" style="top:13.5%;left:3%">RES: <span class="val">512×512</span></div>
+    <div class="anno" style="top:25%;left:1.5%">15357.75</div>
+    <div class="anno" style="top:38%;left:1%">.3620</div>
+    <div class="anno" style="top:9%;right:3%">WIREFRAME.07</div>
+    <div class="anno" style="top:12.5%;right:3%">MODE: <span class="val">MESH</span></div>
+    <div class="anno" style="top:30%;right:2%">.0073</div>
+    <div class="anno" style="top:38%;right:2%">23STR86</div>
+    <div class="anno" style="top:50%;right:2%">01531776</div>
+    <div class="anno" style="bottom:30%;left:3%">DATUM: <span class="val">0.84172</span></div>
+    <div class="anno" style="bottom:30%;right:3%">SIGMA: <span class="val">3.28</span></div>
+  </div>
+
+  <div class="content">
+    <div id="boot">
+      {bootLines.map((line) => (
+        <div class="line" data-delay={line.delay} set:html={line.html}></div>
+      ))}
+      <div class="line cursor-blink" data-delay="3200">
+        <span class="prompt">$ </span><span class="dim">ready</span>
+      </div>
+    </div>
+
+    <div class="status" id="hero-status">
+      <span><span class="dot"></span>Available for 2025</span>
+      <span>{site.location}</span>
+      <span>scroll ↓</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 640px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 var(--page-x) 72px;
+    overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .hero { padding: 0 var(--page-x) 56px; }
+  }
+
+  #terrain {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 35%;
+    background: linear-gradient(to top, var(--bg) 0%, var(--bg) 6%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .content {
+    position: relative;
+    z-index: 3;
+    max-width: 640px;
+  }
+
+  /* Boot lines */
+  .line {
+    opacity: 0;
+    transform: translateY(6px);
+    font-family: var(--font-mono);
+    font-size: var(--fs-body);
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .line.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .prompt { color: var(--text-aux); }
+  .out    { color: var(--text); }
+  .accent { color: var(--accent); }
+  .dim    { color: var(--text-dim); }
+
+  /* Status bar */
+  .status {
+    margin-top: 28px;
+    display: flex;
+    gap: 24px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-aux);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.3s;
+  }
+  .status.visible { opacity: 1; }
+  .status .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* Data annotations */
+  .annotations {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .anno {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    color: var(--text-aux);
+    opacity: 0.4;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .anno .val { color: var(--text-dim); opacity: 0.7; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .line.visible { transition: none; }
+    .status.visible { transition: none; }
+  }
+</style>
+
+<script>
+  import { initTerrain } from '../scripts/terrain';
+
+  // Init terrain after paint so first-paint text isn't delayed
+  requestAnimationFrame(() => {
+    const canvas = document.getElementById('terrain') as HTMLCanvasElement | null;
+    if (canvas) initTerrain(canvas);
+  });
+
+  // Boot sequence — replay on first visit per session
+  const played = sessionStorage.getItem('boot-played');
+  const lines = document.querySelectorAll<HTMLElement>('#boot .line');
+  const status = document.getElementById('hero-status');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (played || prefersReduced) {
+    lines.forEach(l => l.classList.add('visible'));
+    status?.classList.add('visible');
+    if (!played) sessionStorage.setItem('boot-played', '1');
+  } else {
+    let maxDelay = 0;
+    lines.forEach(line => {
+      const d = parseInt(line.dataset.delay ?? '0', 10);
+      if (d > maxDelay) maxDelay = d;
+      setTimeout(() => line.classList.add('visible'), d);
+    });
+    setTimeout(() => {
+      status?.classList.add('visible');
+      sessionStorage.setItem('boot-played', '1');
+    }, maxDelay + 600);
+  }
+</script>

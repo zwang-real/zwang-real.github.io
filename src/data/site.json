@@ -1,0 +1,19 @@
+{
+  "name": "[NAME_PLACEHOLDER]",
+  "role": "product data science",
+  "tagline": "[TAGLINE_PLACEHOLDER — Turning messy data into product decisions that move metrics.]",
+  "about": "[ABOUT_PLACEHOLDER — A brief paragraph about your background, what you care about in data science, and the kind of problems you like solving. 2–3 sentences, terminal-readme style.]",
+  "location": "[LOCATION_PLACEHOLDER]",
+  "locationCode": "SEATTLE, WA",
+  "status": {
+    "available": true,
+    "label": "Open to Opportunities"
+  },
+  "socials": {
+    "email": "you@example.com",
+    "github": "https://github.com/",
+    "linkedin": "https://linkedin.com/in/",
+    "resumeUrl": "/resume.pdf"
+  },
+  "version": "v3.0.0-demo"
+}

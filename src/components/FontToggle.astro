@@ -1,0 +1,51 @@
+---
+// Small dev/exploration toggle to compare Plan A (all-mono) vs Plan B (mono + Space Grotesk).
+// Remove or hide this once you've committed to one plan.
+---
+
+<button id="font-toggle" aria-label="Toggle font plan">
+  <span>FONT: </span><span id="font-toggle-label">A</span>
+</button>
+
+<style>
+  #font-toggle {
+    position: fixed;
+    bottom: 44px;
+    left: var(--edge-x);
+    z-index: 100;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--text-aux);
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid var(--hairline);
+    background: rgba(10, 10, 10, 0.6);
+    backdrop-filter: blur(6px);
+    transition: color var(--dur-fast) var(--ease-out),
+                border-color var(--dur-fast) var(--ease-out);
+    cursor: pointer;
+  }
+  #font-toggle:hover {
+    color: var(--text-dim);
+    border-color: var(--text-aux);
+  }
+  @media (max-width: 768px) {
+    #font-toggle { font-size: 8px; }
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('font-toggle');
+  const label = document.getElementById('font-toggle-label');
+  if (btn && label) {
+    // Reflect current state on load
+    if (document.documentElement.classList.contains('font-b')) label.textContent = 'B';
+
+    btn.addEventListener('click', () => {
+      const isB = document.documentElement.classList.toggle('font-b');
+      label.textContent = isB ? 'B' : 'A';
+      try { localStorage.setItem('font-plan', isB ? 'b' : 'a'); } catch (_) { /* ignore */ }
+    });
+  }
+</script>

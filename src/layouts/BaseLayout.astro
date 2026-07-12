@@ -1,0 +1,46 @@
+---
+import '../styles/global.css';
+import EdgeMeta from '../components/EdgeMeta.astro';
+import FontToggle from '../components/FontToggle.astro';
+import site from '../data/site.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.tagline } = Astro.props;
+const pageTitle = title ? `${title} — ${site.name}` : `${site.name} · Portfolio`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+
+    {/* Fonts — both loaded so we can A/B swap via <html class="font-b"> */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    />
+
+    {/* Restore font preference before paint to avoid FOUC */}
+    <script is:inline>
+      try {
+        const stored = localStorage.getItem('font-plan');
+        if (stored === 'b') document.documentElement.classList.add('font-b');
+      } catch (_) { /* ignore */ }
+    </script>
+  </head>
+  <body>
+    <EdgeMeta />
+    <slot />
+    <FontToggle />
+  </body>
+</html>

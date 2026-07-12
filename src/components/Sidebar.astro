@@ -1,0 +1,133 @@
+---
+import site from '../data/site.json';
+import { getCollection } from 'astro:content';
+
+// Auto-hide WRITING nav if there are no non-draft posts yet
+const writingPosts = await getCollection('writing', ({ data }) => !data.draft);
+const showWriting = writingPosts.length > 0;
+
+const items = [
+  { id: 'hero',       label: '00. Hero' },
+  { id: 'about',      label: '01. About' },
+  { id: 'experience', label: '02. Experience' },
+  { id: 'projects',   label: '03. Projects' },
+  { id: 'toolkit',    label: '04. Toolkit' },
+  ...(showWriting ? [{ id: 'writing', label: '05. Writing' }] : []),
+  { id: 'contact',    label: showWriting ? '06. Contact' : '05. Contact' },
+];
+---
+
+<aside class="sidebar">
+  <div>
+    <div class="logo">
+      <span class="prompt">$</span> {site.name}
+    </div>
+    <nav class="nav">
+      {items.map((it, i) => (
+        <a href={`#${it.id}`} data-target={it.id} class:list={[{ active: i === 0 }]}>
+          <span class="nav-dot" aria-hidden="true"></span>
+          {it.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+
+  <div class="status">
+    {site.status.available && <div><span class="dot"></span>{site.status.label}</div>}
+    <p>{site.version}</p>
+  </div>
+</aside>
+
+<style>
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    padding: 48px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--hairline);
+    z-index: 50;
+    background: var(--bg);
+  }
+  .logo {
+    font-family: var(--font-mono);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 40px;
+  }
+  .logo .prompt { color: var(--text-aux); user-select: none; }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-left: 16px;
+    border-left: 1px solid var(--hairline);
+    margin-left: 4px;
+  }
+  .nav a {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color var(--dur-base);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav a:hover { color: var(--text); }
+  .nav a.active { color: var(--text); }
+  .nav-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    display: inline-block;
+    background: transparent;
+    transition: background var(--dur-base);
+  }
+  .nav a.active .nav-dot { background: var(--accent); }
+
+  .status {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-aux);
+    padding-left: 16px;
+  }
+  .status .dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .status p { margin-top: 4px; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+  }
+</style>
+
+<script>
+  // Scrollspy — activate the nav item whose section is currently in view
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.nav a[data-target]'));
+  const sections = links
+    .map(a => ({ link: a, el: document.getElementById(a.dataset.target ?? '') }))
+    .filter((x): x is { link: HTMLAnchorElement; el: HTMLElement } => x.el !== null);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const id = entry.target.id;
+      links.forEach(a => a.classList.toggle('active', a.dataset.target === id));
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s.el));
+</script>

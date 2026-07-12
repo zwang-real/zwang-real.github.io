@@ -1,0 +1,39 @@
+---
+interface Props {
+  number: string;   // "01"
+  title: string;    // "About"
+  meta?: string;    // "[ README.md ]" or "[ n=3 ]"
+}
+const { number, title, meta } = Astro.props;
+---
+
+<div class="section-header">
+  <h3><span class="num">{number}.</span> {title}</h3>
+  {meta && <span class="coord">{meta}</span>}
+  <div class="line"></div>
+</div>
+
+<style>
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  h3 {
+    font-family: var(--font-heading);
+    font-size: var(--fs-caption);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  h3 .num { color: var(--text-aux); margin-right: 4px; }
+  .coord {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-aux);
+  }
+  .line { flex: 1; height: 1px; background: var(--hairline); }
+</style>

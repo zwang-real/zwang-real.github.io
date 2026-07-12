@@ -1,0 +1,62 @@
+/* ══════════════════════════════════════════════════
+   DESIGN TOKENS
+   Change these in one place, everything follows.
+═════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Color ────────────────────────────────────── */
+  --bg:        #0A0A0A;
+  --text:      #E8E8E6;
+  --text-dim:  #8A8A86;
+  --text-aux:  #55554F;
+  --hairline:  rgba(38, 38, 34, 0.53);
+  --accent:    #E8946A;
+
+  /* ── Fonts (Plan A = both mono) ───────────────── */
+  --font-mono:    'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-body:    var(--font-mono);
+  --font-heading: var(--font-mono);
+
+  /* ── Type scale ───────────────────────────────── */
+  --fs-micro:  10px;
+  --fs-caption: 11px;
+  --fs-small:  12px;
+  --fs-body:   13px;
+  --fs-lead:   14px;
+  --fs-h3:     16px;
+  --fs-h2:     22px;
+  --fs-h1:     34px;
+
+  /* ── Layout ───────────────────────────────────── */
+  --sidebar-w:      220px;
+  --page-x:         64px;
+  --edge-x:         24px;
+  --section-pad-y:  96px;
+
+  /* ── Motion ───────────────────────────────────── */
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast:  120ms;
+  --dur-base:  200ms;
+  --dur-slow:  450ms;
+}
+
+/* ══════════════════════════════════════════════════
+   PLAN B — heading in Space Grotesk
+   Add class `font-b` to <html> to switch (see BaseLayout.astro).
+═════════════════════════════════════════════════════ */
+html.font-b {
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-heading: 'Space Grotesk', system-ui, sans-serif;
+}
+
+/* ── Mobile ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --page-x:        24px;
+    --edge-x:        16px;
+    --section-pad-y: 64px;
+    --fs-h1:         28px;
+    --fs-h2:         20px;
+  }
+}

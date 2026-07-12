@@ -1,0 +1,266 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeader from './SectionHeader.astro';
+
+const raw = await getCollection('projects', ({ data }) => !data.hidden);
+
+const flagship = raw
+  .filter(p => p.data.tier === 'flagship')
+  .sort((a, b) => a.data.order - b.data.order);
+const regular = raw
+  .filter(p => p.data.tier === 'regular')
+  .sort((a, b) => a.data.order - b.data.order);
+const playground = raw
+  .filter(p => p.data.tier === 'playground')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const total = raw.length;
+---
+
+<section id="projects" class="section reveal">
+  <SectionHeader number="03" title="Projects" meta={`[ n=${total} ]`} />
+
+  {/* ── Flagship ─────────────────────────────────── */}
+  {flagship.map(async (p) => {
+    const { Content } = await p.render();
+    return (
+      <article class="flagship">
+        {p.data.image && (
+          <div class="flagship-image">
+            <img src={p.data.image} alt={p.data.title} />
+          </div>
+        )}
+        <div class="flagship-text">
+          <div class="tier-label">▍ FLAGSHIP {p.data.year && `· ${p.data.year}`}</div>
+          <h3 class="flagship-title">{p.data.title}</h3>
+          <p class="flagship-tagline">{p.data.tagline}</p>
+          <div class="body"><Content /></div>
+          {p.data.tags.length > 0 && (
+            <div class="tags">
+              {p.data.tags.map(t => <span class="tag">{t}</span>)}
+            </div>
+          )}
+          <div class="links">
+            {p.data.demoUrl && <a href={p.data.demoUrl} target="_blank" rel="noopener">[ live demo ↗ ]</a>}
+            {p.data.repoUrl && <a href={p.data.repoUrl} target="_blank" rel="noopener">[ source ↗ ]</a>}
+          </div>
+        </div>
+      </article>
+    );
+  })}
+
+  {/* ── Regular cards ────────────────────────────── */}
+  {regular.length > 0 && (
+    <div class="regular-grid">
+      {regular.map((p) => (
+        <a class="card"
+           href={p.data.demoUrl ?? p.data.repoUrl ?? '#'}
+           target={(p.data.demoUrl || p.data.repoUrl) ? '_blank' : undefined}
+           rel="noopener">
+          <div class="card-side"></div>
+          <div class="card-body">
+            <div class="card-head">
+              <h4>{p.data.title}</h4>
+              <span class="arrow">↗</span>
+            </div>
+            <p>{p.data.tagline}</p>
+            {p.data.tags.length > 0 && (
+              <div class="tags">
+                {p.data.tags.map(t => <span class="tag">{t}</span>)}
+              </div>
+            )}
+          </div>
+        </a>
+      ))}
+    </div>
+  )}
+
+  {/* ── Playground ───────────────────────────────── */}
+  {playground.length > 0 && (
+    <div class="playground">
+      <div class="pg-header">
+        <span class="pg-title">PLAYGROUND.EXE</span>
+        <span class="pg-count">n={playground.length}</span>
+        <div class="pg-line"></div>
+      </div>
+      <ul>
+        {playground.map((p) => (
+          <li>
+            <span class="pg-dot">›</span>
+            <span class="pg-name">{p.data.title}</span>
+            <span class="pg-tag">{p.data.tagline}</span>
+            {p.data.demoUrl && <a href={p.data.demoUrl} target="_blank" rel="noopener" class="pg-link">[ run ↗ ]</a>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</section>
+
+<style>
+  /* ── Flagship ─────────────────────────────────── */
+  .flagship {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 32px 0;
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 48px;
+  }
+  @media (max-width: 768px) {
+    .flagship { grid-template-columns: 1fr; gap: 24px; }
+  }
+  .flagship-image {
+    aspect-ratio: 4 / 3;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+  .flagship-image img { width: 100%; height: 100%; object-fit: cover; }
+
+  .tier-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+  }
+  .flagship-title {
+    font-family: var(--font-heading);
+    font-size: var(--fs-h2);
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .flagship-tagline {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .body { color: var(--text-dim); font-size: var(--fs-body); line-height: 1.75; }
+  .body :global(p) { margin: 8px 0; }
+
+  /* ── Regular cards ────────────────────────────── */
+  .regular-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+    margin-bottom: 48px;
+  }
+  .card {
+    display: flex;
+    background: var(--bg);
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    transition: background var(--dur-base);
+    min-height: 140px;
+  }
+  .card:hover { background: rgba(255,255,255,0.015); }
+  .card-side {
+    width: 2px;
+    background: var(--hairline);
+    margin-right: 16px;
+    transition: background var(--dur-base) var(--ease-out),
+                height var(--dur-base) var(--ease-out);
+  }
+  .card:hover .card-side { background: var(--accent); }
+
+  .card-body { flex: 1; }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .card h4 {
+    font-family: var(--font-heading);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--text);
+  }
+  .arrow {
+    color: var(--text-aux);
+    font-size: var(--fs-caption);
+    transition: transform var(--dur-base) var(--ease-out), color var(--dur-base);
+  }
+  .card:hover .arrow { transform: translate(2px, -2px); color: var(--accent); }
+  .card p {
+    font-size: var(--fs-caption);
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  /* ── Shared tags ──────────────────────────────── */
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border: 1px solid var(--hairline);
+    color: var(--text-aux);
+    letter-spacing: 0.04em;
+  }
+
+  .links {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .links a {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    color: var(--text-dim);
+    padding: 6px 10px;
+    border: 1px solid var(--hairline);
+    transition: color var(--dur-base), border-color var(--dur-base);
+  }
+  .links a:hover { color: var(--text); border-color: var(--text-aux); }
+
+  /* ── Playground ───────────────────────────────── */
+  .playground { margin-top: 8px; }
+  .pg-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .pg-title {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+  }
+  .pg-count {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-aux);
+  }
+  .pg-line { flex: 1; height: 1px; background: var(--hairline); }
+
+  .playground ul { list-style: none; }
+  .playground li {
+    padding: 10px 0;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    border-bottom: 1px dashed var(--hairline);
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    transition: padding-left var(--dur-base);
+  }
+  .playground li:hover { padding-left: 8px; }
+  .pg-dot { color: var(--text-aux); }
+  .pg-name { color: var(--text); min-width: 180px; }
+  .pg-tag { color: var(--text-dim); flex: 1; }
+  .pg-link { color: var(--text-aux); }
+  .pg-link:hover { color: var(--accent); }
+</style>
