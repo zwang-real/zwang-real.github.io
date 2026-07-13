@@ -80,8 +80,8 @@ off."* All motion respects `prefers-reduced-motion`.
   the top of `ambient.ts`.
 - **Cursor-proximity glow** — points within ~140px of the cursor brighten and
   grow, peaking at the cursor. This is the *restrained local lift* we always
-  meant by "brighten near cursor," NOT a trail. (The analogous hero-terrain
-  version is still P2/pending.)
+  meant by "brighten near cursor," NOT a trail. The analogous hero-terrain
+  version now ships too (see P2 → hero hover effect).
 - **Custom terminal-reticle cursor** — see the accent-discipline note above.
 
 ## Architecture
@@ -210,9 +210,10 @@ Every `[SOMETHING_PLACEHOLDER]` string is meant to be globally find-and-replaced
 
 ### P2 — polish
 
-- [ ] Hero hover effect — brighten terrain lines near the cursor. Was prototyped
-      (raycast mouse onto the y=0 plane, boost per-vertex alpha within a radius)
-      then deliberately deferred until the silhouette was settled. It's settled now.
+- [x] Hero hover effect — brighten terrain lines near the cursor. Raycasts the
+      cursor onto the y=0 plane and lifts per-vertex alpha within `GLOW_R`, eased
+      in/out. NDC is computed from the canvas rect (not the window) because the
+      canvas sits right of the sidebar. Knobs: `GLOW_R` / `GLOW_BOOST` in terrain.ts.
 - [ ] Once font plan is chosen: delete `FontToggle.astro`, remove it from
       `BaseLayout.astro`, and strip the unused font from the Google Fonts URL
       and the `html.font-b` block in `tokens.css`

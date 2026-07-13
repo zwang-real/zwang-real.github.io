@@ -141,12 +141,33 @@ export function initTerrain(canvas: HTMLCanvasElement): void {
   mesh.position.y = -1.6;   // sink the range so peaks sit lower in frame
   scene.add(mesh);
 
-  // ── Mouse (camera parallax only for now; P3 hover glow deferred) ──
-  let mouseX = 0, mouseY = 0;
+  // ── Mouse: camera parallax + hover glow ──────────
+  let mouseX = 0, mouseY = 0;    // window-relative, for camera parallax
+  let ndcX = 0, ndcY = 0;        // canvas-relative NDC, for the hover raycast
+  let mouseInside = false;
   document.addEventListener('mousemove', (e) => {
     mouseX = (e.clientX / window.innerWidth) * 2 - 1;
     mouseY = (e.clientY / window.innerHeight) * 2 - 1;
-  });
+    // NDC must be relative to the canvas rect, not the window — the canvas sits
+    // right of the sidebar, so window coords are offset horizontally.
+    const r = canvas.getBoundingClientRect();
+    ndcX = ((e.clientX - r.left) / r.width) * 2 - 1;
+    ndcY = -(((e.clientY - r.top) / r.height) * 2 - 1);
+    mouseInside = true;
+  }, { passive: true });
+  document.addEventListener('mouseleave', () => { mouseInside = false; });
+
+  // Raycast the cursor onto the y=0 plane to get a terrain-space point, then
+  // lift the alpha of vertices within GLOW_R of it. Local x/z == world x/z here
+  // because the mesh is only translated in y.
+  const raycaster = new THREE.Raycaster();
+  const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  const ndc = new THREE.Vector2();
+  const hit = new THREE.Vector3();
+  let hasHit = false, hitX = 0, hitZ = 0;
+  let glow = 0;                 // eased 0→1 so the lift fades in/out, never pops
+  const GLOW_R = 3.6;           // world-space radius of the hover lift
+  const GLOW_BOOST = 0.35;      // max added alpha at the cursor
 
   // ── Peak-based height field ──────────────────────
   const PEAKS: [number, number, number, number, number][] = [
@@ -216,12 +237,36 @@ export function initTerrain(canvas: HTMLCanvasElement): void {
     raf = requestAnimationFrame(animate);
     if (!prefersReduced) time += 0.0018;
 
+    // Resolve cursor → terrain point (ease glow so it fades rather than snaps)
+    const target = mouseInside && !prefersReduced ? 1 : 0;
+    glow += (target - glow) * 0.08;
+    hasHit = false;
+    if (glow > 0.001) {
+      camera.updateMatrixWorld();
+      ndc.set(ndcX, ndcY);
+      raycaster.setFromCamera(ndc, camera);
+      if (raycaster.ray.intersectPlane(groundPlane, hit)) {
+        hasHit = true; hitX = hit.x; hitZ = hit.z;
+      }
+    }
+    const glowActive = hasHit && glow > 0.001;
+    const glowR2 = GLOW_R * GLOW_R;
+
     for (let idx = 0; idx < COUNT; idx++) {
       const x = basePositions[idx * 2];
       const z = basePositions[idx * 2 + 1];
       const h = getHeight(x, z, time);
       posArr[idx * 3 + 1] = h;
       setVertex(idx, h, maxH);
+
+      if (glowActive) {
+        const dx = x - hitX, dz = z - hitZ;
+        const d2 = dx * dx + dz * dz;
+        if (d2 < glowR2) {
+          const f = 1 - Math.sqrt(d2) / GLOW_R;
+          alphas[idx] = Math.min(0.6, alphas[idx] + GLOW_BOOST * f * f * glow);
+        }
+      }
     }
 
     geo.attributes.position.needsUpdate = true;
