@@ -12,7 +12,7 @@
   --hairline:  rgba(38, 38, 34, 0.53);
   --accent:    #E8946A;
 
-  /* ── Fonts (Plan A = both mono) ───────────────── */
+  /* ── Fonts (Plan A — IBM Plex Mono throughout) ── */
   --font-mono:    'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-display: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-body:    var(--font-mono);
@@ -39,15 +39,6 @@
   --dur-fast:  120ms;
   --dur-base:  200ms;
   --dur-slow:  450ms;
-}
-
-/* ══════════════════════════════════════════════════
-   PLAN B — heading in Space Grotesk
-   Add class `font-b` to <html> to switch (see BaseLayout.astro).
-═════════════════════════════════════════════════════ */
-html.font-b {
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-heading: 'Space Grotesk', system-ui, sans-serif;
 }
 
 /* ── Mobile ─────────────────────────────────────── */

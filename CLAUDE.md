@@ -44,10 +44,11 @@ certainly wrong.
 
 ### Typography
 
-- Body/UI: **IBM Plex Mono**
-- A/B experiment in progress: Plan A = all-mono; Plan B = Plex Mono body +
-  Space Grotesk headings. Toggle is wired via `<html class="font-b">` and a
-  dev-only `FontToggle.astro` button (bottom-left). **Not yet decided.**
+- Body/UI **and headings**: **IBM Plex Mono** everywhere.
+- **Decided: Plan A (all-mono).** The old A/B toggle, the `html.font-b` block,
+  the `FontToggle.astro` component, and the Space Grotesk web-font load have all
+  been removed. `--font-heading` / `--font-display` still exist as tokens but
+  now just alias the mono stack.
 
 ### Typographic language
 
@@ -89,7 +90,7 @@ off."* All motion respects `prefers-reduced-motion`.
 ```
 src/
 ├── pages/index.astro       single home page, composes all sections
-├── layouts/BaseLayout.astro  fonts, meta, EdgeMeta, FontToggle
+├── layouts/BaseLayout.astro  fonts, meta, EdgeMeta, AmbientField
 ├── components/
 │   ├── Hero.astro          terrain canvas + boot sequence + data annotations
 │   ├── About.astro
@@ -101,8 +102,7 @@ src/
 │   ├── Sidebar.astro       nav + scrollspy
 │   ├── EdgeMeta.astro      four-corner archive metadata
 │   ├── AmbientField.astro  fixed page-wide scatter-field canvas (see below)
-│   ├── SectionHeader.astro shared `01. TITLE [ meta ] ────` header
-│   └── FontToggle.astro    ⚠️ dev-only, delete once font plan is decided
+│   └── SectionHeader.astro shared `01. TITLE [ meta ] ────` header
 ├── scripts/
 │   ├── terrain.ts          Three.js hero — see below
 │   └── ambient.ts          2D-canvas ambient scatter + cursor-proximity glow
@@ -170,33 +170,27 @@ have all been tried and explicitly rejected. Don't reintroduce them.
 - [x] Edge metadata (four corners, live clock, scroll %)
 - [x] Sidebar scrollspy
 - [x] Scroll-reveal on sections (IntersectionObserver + CSS)
-- [x] Font A/B toggle wired
+- [x] Font decided: Plan A (all-mono); A/B toggle removed
 - [x] Writing section self-hiding logic
 - [x] Pushed to `zwang-real.github.io`
 
 ### Blocked / needs a decision from Zijing
 
-- [ ] **Repo is Private.** GitHub Pages does not build private repos on the free
-      plan. Either make the repo public or upgrade to Pro. **This blocks deploy.**
-- [ ] Font plan: A (all-mono) vs B (mono + Space Grotesk). Toggle is live —
-      flip it, pick one.
+- [x] ~~Repo is Private~~ — now Public; Pages Source set to GitHub Actions.
+- [x] ~~Font plan~~ — decided: **Plan A (all-mono)**. Toggle + Space Grotesk removed.
 - [ ] What name goes in `$ whoami` — "Zijing", full pinyin, or an English name?
+      (still open; part of P1 content)
 
-### P0 — get the site live again
+### P0 — get the site live again ✅ DONE
 
-The site is currently **down**: Pages is still configured to serve the repo root,
-but the root is now Astro source, not a built `index.html`.
+The site is **live** at https://zwang-real.github.io via GitHub Actions.
 
-- [ ] Set `site: 'https://zwang-real.github.io'` in `astro.config.mjs`
-      (no `base` needed — user sites deploy at root)
-- [ ] Add `.github/workflows/deploy.yml` — build with Node 20, `npm ci`,
-      `npm run build`, then `actions/upload-pages-artifact@v3` + `actions/deploy-pages@v4`
-      on `./dist`. Needs `permissions: { contents: read, pages: write, id-token: write }`.
-- [ ] Commit `package-lock.json` (the workflow's `npm ci` requires it)
-- [ ] Repo Settings → Pages → Source: switch from "Deploy from a branch" to
-      **"GitHub Actions"**
-- [ ] Resume PDF: `Zijing_Wang.pdf` needs to live in `public/`. Either rename it
-      to `resume.pdf` or update `resumeUrl` in `src/data/site.json` to match.
+- [x] `site: 'https://zwang-real.github.io'` set in `astro.config.mjs`
+- [x] `.github/workflows/deploy.yml` — Node 20, `npm ci` + `npm run build`,
+      `upload-pages-artifact@v3` + `deploy-pages@v4` on `./dist`, correct permissions
+- [x] `package-lock.json` committed
+- [x] Repo Public + Pages Source → GitHub Actions
+- [x] Resume PDF lives at `public/resume.pdf`, matching `resumeUrl` in `site.json`
 
 ### P1 — real content (all placeholders right now)
 
@@ -214,9 +208,9 @@ Every `[SOMETHING_PLACEHOLDER]` string is meant to be globally find-and-replaced
       cursor onto the y=0 plane and lifts per-vertex alpha within `GLOW_R`, eased
       in/out. NDC is computed from the canvas rect (not the window) because the
       canvas sits right of the sidebar. Knobs: `GLOW_R` / `GLOW_BOOST` in terrain.ts.
-- [ ] Once font plan is chosen: delete `FontToggle.astro`, remove it from
-      `BaseLayout.astro`, and strip the unused font from the Google Fonts URL
-      and the `html.font-b` block in `tokens.css`
+- [x] Font plan chosen (A / all-mono): deleted `FontToggle.astro`, removed it
+      from `BaseLayout.astro`, stripped Space Grotesk from the Google Fonts URL
+      and removed the `html.font-b` block from `tokens.css`
 - [ ] Number roll-up animation on key metrics when they scroll into view
 - [x] Ambient scatter field behind content + cursor-proximity glow (see Motion
       principle → "In scope, and shipped")

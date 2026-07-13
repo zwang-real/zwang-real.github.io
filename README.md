@@ -116,11 +116,10 @@ one place (sidebar logo, hero boot lines, contact section, meta tags).
 `src/styles/tokens.css` — every color, font, spacing, and timing value.
 Change them here and the whole site follows.
 
-Font A/B toggle is wired: `<html class="font-b">` swaps display/heading
-to Space Grotesk. A small bottom-left toggle (`FontToggle.astro`) lets
-you flip between plans during exploration. Once you commit to a plan,
-delete `FontToggle.astro` from `BaseLayout.astro` and (if you picked A)
-optionally remove the Space Grotesk load and the `html.font-b` block.
+Typography is **Plan A: IBM Plex Mono throughout**. The earlier A/B toggle
+(`FontToggle.astro`, the `html.font-b` block, and the Space Grotesk web font)
+has been removed. `--font-heading` / `--font-display` remain as tokens but now
+alias the mono stack.
 
 ## Hero terrain
 
