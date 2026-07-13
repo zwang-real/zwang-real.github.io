@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import EdgeMeta from '../components/EdgeMeta.astro';
+import AmbientField from '../components/AmbientField.astro';
 import FontToggle from '../components/FontToggle.astro';
 import site from '../data/site.json';
 
@@ -39,6 +40,7 @@ const pageTitle = title ? `${title} — ${site.name}` : `${site.name} · Portfol
     </script>
   </head>
   <body>
+    <AmbientField />
     <EdgeMeta />
     <slot />
     <FontToggle />

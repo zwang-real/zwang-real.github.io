@@ -33,11 +33,14 @@ Keywords: *terminal minimal / data-as-aesthetic / restrained motion / archive fe
 --accent    #E8946A   muted orange
 ```
 
-**Accent discipline is the whole aesthetic.** `--accent` appears in exactly four
-places sitewide: active nav dot, hover underline, status indicator dot, and a
-handful of highlighted lines in the hero terrain. Everything else is greyscale.
-Site-wide accent usage should stay under ~2%. If a change adds orange somewhere
-new, that's almost certainly wrong.
+**Accent discipline is the whole aesthetic.** `--accent` appears in exactly five
+places sitewide: active nav dot, hover underline, status indicator dot, a
+handful of highlighted lines in the hero terrain, and the interactive-cursor
+reticle (the target crosshair shown over links/buttons — see custom cursor
+below; this one is a deliberate, Zijing-approved exception justified as click
+affordance). Everything else is greyscale. Site-wide accent usage should stay
+under ~2%. If a change adds orange somewhere new beyond these five, that's almost
+certainly wrong.
 
 ### Typography
 
@@ -67,6 +70,20 @@ off."* All motion respects `prefers-reduced-motion`.
 - Any loading screen over 1 second
 - Contact forms (static site — contact is email + LinkedIn only)
 
+**In scope, and shipped** (don't mistake these for the rejected effects above):
+- **Ambient scatter field** (`AmbientField.astro` + `scripts/ambient.ts`) — a
+  faint, monochrome, sparse point field fixed behind all content so scrolling
+  past the hero never lands on flat black. It is *data-as-aesthetic* (star chart
+  / scatter), NOT the rejected hero "particles": no connecting lines, no glow, no
+  accent colour, ~30–44% peak alpha, slow drift, `+` scatter marks. Static under
+  `prefers-reduced-motion`, pauses when tab hidden. Tuning knobs are constants at
+  the top of `ambient.ts`.
+- **Cursor-proximity glow** — points within ~140px of the cursor brighten and
+  grow, peaking at the cursor. This is the *restrained local lift* we always
+  meant by "brighten near cursor," NOT a trail. (The analogous hero-terrain
+  version is still P2/pending.)
+- **Custom terminal-reticle cursor** — see the accent-discipline note above.
+
 ## Architecture
 
 ```
@@ -83,9 +100,12 @@ src/
 │   ├── Contact.astro
 │   ├── Sidebar.astro       nav + scrollspy
 │   ├── EdgeMeta.astro      four-corner archive metadata
+│   ├── AmbientField.astro  fixed page-wide scatter-field canvas (see below)
 │   ├── SectionHeader.astro shared `01. TITLE [ meta ] ────` header
 │   └── FontToggle.astro    ⚠️ dev-only, delete once font plan is decided
-├── scripts/terrain.ts      Three.js hero — see below
+├── scripts/
+│   ├── terrain.ts          Three.js hero — see below
+│   └── ambient.ts          2D-canvas ambient scatter + cursor-proximity glow
 ├── styles/
 │   ├── tokens.css          ALL design tokens. Change here, not in components.
 │   └── global.css          reset + utilities + .reveal/.section
@@ -197,7 +217,10 @@ Every `[SOMETHING_PLACEHOLDER]` string is meant to be globally find-and-replaced
       `BaseLayout.astro`, and strip the unused font from the Google Fonts URL
       and the `html.font-b` block in `tokens.css`
 - [ ] Number roll-up animation on key metrics when they scroll into view
-- [ ] Custom crosshair cursor (lowest priority, optional — cut it if it feels gimmicky)
+- [x] Ambient scatter field behind content + cursor-proximity glow (see Motion
+      principle → "In scope, and shipped")
+- [x] Custom crosshair cursor — terminal reticle, warm-white default + accent
+      target over interactive elements
 - [ ] Lighthouse: performance target is **≥ 90**. Hero text must be visible within
       1s; the terrain loads async and must not block first paint.
 - [ ] Repo About: add a description and the site URL
