@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://your-domain.com',   // update when domain is set
+  site: 'https://zwang-real.github.io',
   build: {
     inlineStylesheets: 'auto',
   },
